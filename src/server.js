@@ -1,16 +1,18 @@
-require("dotenv").config();
-import express from "express";
-import bodyParser from "body-parser";
-import viewEngine from "./config/viewEngine";
-import initWebRoutes from "./routes/web";
+const functions = require("firebase-functions");
+const express = require("express");
+const bodyParser = require("body-parser");
+const initWebRoutes = require("./routes/web"); // Update with the correct path
+const viewEngine = require("./config/viewEngine"); // Update with the correct path
 
-let app = express();
-viewEngine(app);
+const app = express();
+
+viewEngine(app); // Set up your view engine
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Use initWebRoutes to set up your routes
 initWebRoutes(app);
-let port = process.env.port || 5000;
-app.listen(port, () => {
-  console.log("app is running on port:" + port);
-});
+
+// Export the Cloud Function
+exports.app = functions.https.onRequest(app);
