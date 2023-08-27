@@ -1,18 +1,23 @@
 const functions = require("firebase-functions");
 const express = require("express");
 const bodyParser = require("body-parser");
-const initWebRoutes = require("./routes/web"); // Update with the correct path
-const viewEngine = require("./config/viewEngine"); // Update with the correct path
+const viewEngine = require("./config/viewEngine");
+const initWebRoutes = require("./routes/web");
 
 const app = express();
 
-viewEngine(app); // Set up your view engine
+viewEngine(app);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// Use initWebRoutes to set up your routes
 initWebRoutes(app);
 
-// Export the Cloud Function
+// Update the following line to use the proper environment variable
+const port = process.env.PORT || 5000;
+
 exports.app = functions.https.onRequest(app);
+
+// Remove the following part since it's not needed in Cloud Functions
+app.listen(port, () => {
+  console.log("app is running on port:" + port);
+});
